@@ -1,10 +1,11 @@
 import { description, title } from "@/lib/metadata";
 import { generateMetadata } from "@/lib/farcaster-embed";
 import React from "react";
+use client;
 
 export { generateMetadata };
 
-export default function Home(): React.ReactNode {
+export default function Home(): JSX.Element {
   // NEVER write anything here, only use this page to import components
   return (
     <main className="flex flex-col gap-3 place-items-center place-content-center px-4 grow">

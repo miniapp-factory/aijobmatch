@@ -3,7 +3,6 @@ import { description, title } from "@/lib/metadata";
 import { generateMetadata } from "@/lib/farcaster-embed";
 import React from "react";
 
-export { generateMetadata };
 
 export default function Home(): JSX.Element {
   // NEVER write anything here, only use this page to import components

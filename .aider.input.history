@@ -18,3 +18,1763 @@
 +```
 +
 +Generate an app logo and update the app metadata title and description.
+
+# 2025-12-01 06:59:00.551171
++🎯 AIJobMatch - Complete Command List for OpenXAI
++PROJECT: AIJobMatch - Skills-to-Opportunity Matcher
++
++📋 PHASE 1: FRONTEND UI COMPONENTS
++Command 1: Main App Structure
++Create a React component called "AIJobMatchApp" with the following features:
++- Professional gradient background (blue #1e40af to purple #7c3aed)
++- Clean, modern header with logo "💼 AIJobMatch" and tagline "Skills over credentials"
++- Navigation sidebar with 4 sections: Dashboard, Skill Tests, Job Bounties, My Reputation
++- Main content area that switches based on active section
++- Top right corner: ConnectWallet button and user reputation score badge
++- Use Tailwind CSS with professional color scheme
++- Mobile responsive with hamburger menu
++- Smooth transitions between sections
++- Footer with "Powered by Base & Claude AI"
++Command 2: Dashboard Component
++Create a "Dashboard" component with:
++- Welcome message with connected wallet address
++- 4 stat cards in a grid:
++  * Total Skills Verified (number with icon)
++  * Reputation Score (0-1000 with progress bar)
++  * Active Applications (number)
++  * Earnings (in ETH)
++- "Quick Actions" section with 3 buttons:
++  * Take Skill Test (primary blue button)
++  * Browse Jobs (secondary button)
++  * View Reputation NFT (outline button)
++- Recent activity feed showing last 5 actions
++- Chart showing reputation growth over time using recharts
++- Use lucide-react icons throughout
++- Skeleton loading states
++Command 3: Skill Test Interface
++Create a "SkillTestSection" component with:
++- Dropdown to select skill category: Web Development, Design, Marketing, Data Analysis, Writing
++- "Start Test" button that reveals test interface
++- Test UI with:
++  * Progress bar showing question X of 10
++  * Question display area (supports text, code snippets, images)
++  * Multiple choice answers (4 options per question)
++  * Timer showing remaining time (10 min total)
++  * "Next" and "Previous" buttons
++  * "Submit Test" button on last question
++- After submission:
++  * Loading animation with "AI analyzing your responses..."
++  * Score reveal with confetti animation if score > 70%
++  * Detailed breakdown per question
++  * "Mint Skill NFT" button if passed (score >= 70%)
++- Use different colors for correct/incorrect answers
++- Responsive design for mobile
++Command 4: Job Bounties Listing
++Create a "JobBountiesSection" component with:
++- Filter bar with:
++  * Search input (by keyword)
++  * Skill filter dropdown (show only jobs matching my verified skills)
++  * Bounty range slider (₱0 - ₱50,000)
++  * Sort by: Newest, Highest Bounty, Best Match
++- Job cards grid (2 columns desktop, 1 mobile) with each card showing:
++  * Job title
++  * Company/poster address (shortened)
++  * Required skills as badges (highlight verified skills in green)
++  * Bounty amount in ETH and PHP equivalent
++  * Deadline countdown
++  * Number of applicants
++  * "Apply Now" button (disabled if missing required skills)
++- Hover effect with shadow and scale
++- Pagination at bottom (10 jobs per page)
++- Empty state: "No jobs match your filters" with illustration
++Command 5: Job Detail Modal
++Create a "JobDetailModal" component that appears when clicking a job card:
++- Modal overlay with backdrop blur
++- Content sections:
++  * Job title and company
++  * Full description
++  * Required skills list with checkmarks for verified skills
++  * Deliverables/milestones
++  * Bounty breakdown
++  * Deadline
++  * Application count
++- "Apply with Verified Skills" button
++- Application form (appears on click):
++  * Cover message textarea
++  * Portfolio links (optional)
++  * Estimated completion time
++  * "Submit Application" button
++- Close button (X) in top right
++- Smooth slide-in animation from bottom
++Command 6: Reputation Profile Component
++Create a "ReputationProfile" component with:
++- Large reputation score display (0-1000) with circular progress indicator
++- Reputation level badge: Beginner (0-200), Intermediate (201-500), Expert (501-800), Master (801-1000)
++- Skills verified section:
++  * Grid of skill badges with NFT icons
++  * Each badge shows: skill name, verification date, score percentage
++  * Click to view NFT on blockchain
++- Work history:
++  * Timeline of completed jobs
++  * Each entry shows: job title, completion date, rating, earnings
++- "View on Base Explorer" button to see on-chain reputation
++- "Share Profile" button generating shareable link
++- QR code for profile (for easy sharing)
++Command 7: Application Tracker
++Create an "ApplicationTracker" component showing:
++- Tabs: Active, Completed, Rejected
++- Application cards with:
++  * Job title
++  * Application date
++  * Status badge (Pending, Under Review, Accepted, Rejected, Completed)
++  * Progress indicators for milestones
++  * Messages from employer
++  * "Withdraw Application" option for pending
++  * "Submit Work" button for accepted jobs
++  * Rating display for completed jobs
++- Real-time updates when status changes
++- Notification badge on tab if new messages
++
++📋 PHASE 2: WEB3 INTEGRATION
++Command 8: Wallet Connection Setup
++Create a "ConnectWallet" button component that:
++- Displays "Connect Wallet" when not connected
++- On click:
++  * Detects if Base Wallet or MetaMask is installed
++  * Requests connection to Base network (chainId: 8453)
++  * Prompts network switch if on wrong network
++- When connected:
++  * Shows shortened address (0x1234...5678)
++  * Shows small circle avatar (generated from address using jazzicon pattern)
++  * Dropdown on click with options:
++    - View Profile
++    - Disconnect
++- Stores wallet address in React Context
++- Shows connection status indicator (green dot)
++- Error handling for wallet not found or user rejection
++- Pulse animation while connecting
++Command 9: Skill NFT Minting Function
++Create a function "mintSkillNFT" in services/web3Service.js that:
++- Takes parameters: skillName, score, testMetadata, walletAddress
++- Generates NFT metadata JSON:
++  {
++    name: "Verified Skill: [skillName]",
++    description: "On-chain proof of [skillName] proficiency",
++    image: "ipfs://[generated-certificate-image]",
++    attributes: [
++      { trait_type: "Skill", value: skillName },
++      { trait_type: "Score", value: score },
++      { trait_type: "Verified Date", value: timestamp },
++      { trait_type: "Test Questions", value: testMetadata }
++    ]
++  }
++- Calls smart contract mintSkill function
++- Waits for transaction confirmation
++- Returns: { success: boolean, tokenId: number, txHash: string }
++- Shows toast notifications for pending/success/error states
++- Updates user's verified skills array in state
++Command 10: Smart Contract Interaction Utils
++Create utilities file "services/contractUtils.js" with:
++- Contract ABI definitions for:
++  * SkillNFT contract
++  * ReputationSystem contract  
++  * JobBounty contract
++- Function getContract(contractName) that returns ethers.js contract instance
++- Function getUserSkillNFTs(address) that:
++  * Queries blockchain for all NFTs owned by address
++  * Fetches metadata for each NFT
++  * Returns array of skill objects
++- Function getReputationScore(address) that:
++  * Reads on-chain reputation score
++  * Calculates level based on score
++  * Returns { score, level, lastUpdate }
++- Function estimateGas(contractFunction, params) for gas estimation
++- Error handling wrapper for all blockchain calls
++Command 11: Job Application On-Chain
++Create function "submitJobApplication" that:
++- Takes: jobId, coverMessage, portfolioLinks, verifiedSkills
++- Creates application struct:
++  {
++    applicant: walletAddress,
++    jobId: jobId,
++    skills: verifiedSkills (array of NFT tokenIds),
++    timestamp: Date.now(),
++    message: coverMessage,
++    status: "pending"
++  }
++- Calls JobBounty smart contract applyToJob function
++- Emits ApplicationSubmitted event on-chain
++- Updates local state with application
++- Shows success notification
++- Returns applicationId
++Command 12: Reputation Update Function
++Create function "updateReputation" that:
++- Called when job is completed
++- Takes: jobId, rating (1-5 stars), earnings
++- Calculates reputation points:
++  * Base: 10 points per completion
++  * Bonus: rating * 5 (max 25)
++  * Penalty: -20 if deadline missed
++- Calls ReputationSystem.updateScore on-chain
++- Updates NFT metadata with new reputation
++- Emits ReputationUpdated event
++- Triggers UI update with animation
++- Returns new total reputation score
++
++📋 PHASE 3: AI INTEGRATION (Claude API)
++Command 13: AI Test Question Generator
++Create async function "generateSkillTest" in services/aiService.js that:
++- Takes parameter: skillCategory (string)
++- Calls Claude API with system prompt:
++  "You are an expert skills assessor. Generate a 10-question multiple choice test for [skillCategory]. 
++   Each question should test practical knowledge. 
++   Return ONLY valid JSON:
++   {
++     questions: [
++       {
++         id: 1,
++         question: "question text",
++         code: "code snippet if applicable",
++         options: ["A", "B", "C", "D"],
++         correctAnswer: "A",
++         explanation: "why this is correct"
++       }
++     ]
++   }
++   Make questions challenging but fair. Mix difficulty levels."
++- Model: claude-sonnet-4-20250514
++- Max tokens: 2000
++- Parses JSON response safely
++- Validates question structure
++- Returns questions array
++- Caches test for 1 hour to avoid regenerating
++- Error handling with retry logic
++Command 14: AI Answer Analysis
++Create function "analyzeTestAnswers" that:
++- Takes: questions array, userAnswers array
++- Calls Claude API with prompt:
++  "Analyze these test responses and provide detailed feedback.
++   Questions: [questions]
++   User Answers: [userAnswers]
++   
++   Return ONLY JSON:
++   {
++     score: 0-100,
++     correctCount: number,
++     totalQuestions: number,
++     passed: boolean (>= 70),
++     feedback: {
++       strengths: ["area1", "area2"],
++       weaknesses: ["area1", "area2"],
++       recommendations: ["suggestion1", "suggestion2"]
++     },
++     detailedResults: [
++       {
++         questionId: 1,
++         correct: true/false,
++         userAnswer: "A",
++         correctAnswer: "B",
++         explanation: "why"
++       }
++     ]
++   }"
++- Returns analysis object
++- Stores result on-chain as test metadata
++- Timeout: 15 seconds
++Command 15: AI Job Matching Algorithm
++Create function "matchJobsToSkills" that:
++- Takes: userSkills array, availableJobs array
++- Calls Claude API to analyze match quality:
++  "You are a job matching AI. Given user's verified skills and job requirements, 
++   calculate match scores.
++   
++   User Skills: [skills with scores]
++   Jobs: [job requirements]
++   
++   Return ONLY JSON array:
++   [
++     {
++       jobId: "id",
++       matchScore: 0-100,
++       matchedSkills: ["skill1", "skill2"],
++       missingSkills: ["skill3"],
++       recommendation: "why good fit or not"
++     }
++   ]
++   Sort by matchScore descending."
++- Parses response
++- Sorts jobs by match score
++- Highlights best matches in UI
++- Returns sorted job list with match data
++Command 16: AI Portfolio Analysis
++Create function "analyzePortfolio" that:
++- Takes: portfolioLinks array (GitHub, Behance, etc.)
++- For each link, uses Claude to:
++  * Fetch public data (if available)
++  * Analyze quality and relevance
++  * Extract skills demonstrated
++  * Rate experience level
++- Returns:
++  {
++    overallScore: 0-100,
++    detectedSkills: ["skill1", "skill2"],
++    experienceLevel: "beginner/intermediate/expert",
++    highlights: ["impressive aspect 1", "aspect 2"],
++    suggestions: ["improve this", "add that"]
++  }
++- Used to supplement skill test results
++- Displayed in reputation profile
++
++📋 PHASE 4: BACKEND LOGIC & STATE MANAGEMENT
++Command 17: Global State Context
++Create React Context "AIJobMatchContext.jsx" that manages:
++- State variables:
++  * walletAddress: string
++  * userSkills: array of verified skill objects
++  * reputationScore: number
++  * userApplications: array
++  * availableJobs: array
++  * activeTest: object or null
++  * loading: boolean
++  * error: string or null
++
++- Functions:
++  * connectWallet(): connects and sets address
++  * loadUserData(address): fetches skills, reputation, applications
++  * startSkillTest(category): initializes test
++  * submitTest(answers): sends to AI, updates skills
++  * applyToJob(jobId, data): submits application
++  * refreshJobs(): fetches latest bounties
++  * updateReputation(score): updates local state
++
++- Provider component wrapping entire app
++- Custom hooks: useWallet(), useSkills(), useJobs()
++- Persists some data to localStorage
++Command 18: Job Data Fetcher
++Create service "services/jobService.js" with:
++- Function fetchAllJobs() that:
++  * Queries JobBounty smart contract for all active jobs
++  * Reads job details from contract storage
++  * Fetches additional metadata from IPFS if applicable
++  * Returns array of job objects:
++    {
++      id, title, description, poster, requiredSkills,
++      bountyAmount, deadline, applicantCount, status
++    }
++  * Caches results for 5 minutes
++  * Sorts by newest first
++
++- Function fetchMyApplications(address) that:
++  * Gets all applications by user address
++  * Includes job details for each application
++  * Groups by status
++  * Returns categorized applications
++
++- Function fetchJobById(jobId) for detailed view
++Command 19: Skill Verification Manager
++Create "services/skillManager.js" with:
++- Function verifySkill(skillName, testResult) that:
++  * Checks if score >= 70% (passing)
++  * If passed:
++    - Mints NFT via mintSkillNFT
++    - Updates user's verifiedSkills array
++    - Updates reputation (+50 points for new skill)
++    - Stores test metadata on-chain
++  * Returns verification status
++
++- Function getVerifiedSkills(address) that:
++  * Fetches all skill NFTs owned by address
++  * Parses metadata
++  * Returns array with skill name, score, date
++
++- Function hasRequiredSkills(userSkills, jobRequiredSkills) that:
++  * Checks if user has all required verified skills
++  * Returns { hasAll: boolean, missing: [] }
++Command 20: Notification System
++Create "services/notificationService.js" with:
++- Toast notification wrapper using react-hot-toast or similar
++- Functions:
++  * notifySuccess(message)
++  * notifyError(message)
++  * notifyInfo(message)
++  * notifyLoading(message) returns dismiss function
++
++- Event listener for on-chain events:
++  * ApplicationStatusChanged
++  * JobCompleted
++  * ReputationUpdated
++  * NewJobPosted matching user skills
++
++- Shows desktop notifications (if permission granted)
++- Stores notification history in state
++- Badge counter for unread notifications
++
++📋 PHASE 5: SMART CONTRACTS (Solidity)
++Command 21: Skill NFT Contract
++Create Solidity smart contract "SkillNFT.sol" with:
++- Pragma solidity ^0.8.20
++- Inherit OpenZeppelin ERC721URIStorage
++- Contract name: SkillNFT, symbol: SKILL
++
++Structs:
++- SkillData {
++    string skillName;
++    uint256 score;
++    uint256 verifiedDate;
++    string testMetadataURI;
++  }
++
++Mappings:
++- tokenId => SkillData
++- address => tokenId[] (user's skills)
++- skillName => tokenId[] (all holders of skill)
++
++Functions:
++- mintSkill(address to, string skillName, uint256 score, string metadataURI)
++  * Requires score >= 70
++  * Increments tokenId counter
++  * Mints NFT to address
++  * Stores SkillData
++  * Emits SkillVerified event
++  * Returns tokenId
++
++- getUserSkills(address user) view returns (uint256[])
++  * Returns array of tokenIds owned by user
++
++- getSkillData(uint256 tokenId) view returns (SkillData)
++
++- transferFrom override: prevent transfer (soulbound)
++
++Events:
++- SkillVerified(address indexed user, string skillName, uint256 score, uint256 tokenId)
++Command 22: Reputation System Contract
++Create Solidity contract "ReputationSystem.sol" with:
++- Pragma solidity ^0.8.20
++
++Structs:
++- ReputationData {
++    uint256 score;
++    uint256 jobsCompleted;
++    uint256 totalEarnings;
++    uint256 averageRating; // out of 500 (5 stars * 100)
++    uint256 lastUpdate;
++  }
++
++Mappings:
++- address => ReputationData
++
++Functions:
++- updateReputation(address user, uint256 points, bool increase)
++  * Only callable by JobBounty contract
++  * Increases or decreases reputation score
++  * Updates lastUpdate timestamp
++  * Emits ReputationUpdated event
++
++- recordJobCompletion(address user, uint256 rating, uint256 earnings)
++  * Increments jobsCompleted
++  * Updates averageRating (weighted average)
++  * Adds earnings to totalEarnings
++  * Adds reputation points based on rating
++
++- getReputation(address user) view returns (ReputationData)
++
++- getLevel(address user) view returns (string)
++  * Returns level based on score:
++    0-200: Beginner
++    201-500: Intermediate  
++    501-800: Expert
++    801-1000: Master
++
++Events:
++- ReputationUpdated(address indexed user, uint256 newScore, uint256 timestamp)
++Command 23: Job Bounty Contract
++Create Solidity contract "JobBounty.sol" with:
++- Pragma solidity ^0.8.20
++
++Structs:
++- Job {
++    uint256 id;
++    address poster;
++    string title;
++    string descriptionURI;
++    string[] requiredSkills;
++    uint256 bountyAmount;
++    uint256 deadline;
++    address[] applicants;
++    address acceptedWorker;
++    bool completed;
++    bool paid;
++  }
++
++- Application {
++    uint256 jobId;
++    address applicant;
++    uint256[] verifiedSkillNFTs;
++    string message;
++    uint256 timestamp;
++    ApplicationStatus status; // enum: Pending, Accepted, Rejected
++  }
++
++Mappings:
++- jobId => Job
++- applicationId => Application
++- address => uint256[] (user's applications)
++
++Functions:
++- postJob(string title, string descriptionURI, string[] requiredSkills, uint256 deadline) payable
++  * Requires msg.value as bounty
++  * Creates new Job
++  * Increments jobId counter
++  * Stores bounty in contract
++  * Emits JobPosted event
++  * Returns jobId
++
++- applyToJob(uint256 jobId, uint256[] verifiedSkillNFTs, string message)
++  * Verifies user owns the NFTs
++  * Creates Application
++  * Adds to job.applicants
++  * Emits ApplicationSubmitted event
++
++- acceptApplicant(uint256 jobId, address applicant)
++  * Only job poster
++  * Sets job.acceptedWorker
++  * Updates application status
++  * Emits ApplicantAccepted event
++
++- completeJob(uint256 jobId, uint256 rating)
++  * Only job poster after work submitted
++  * Transfers bounty to worker
++  * Calls ReputationSystem.recordJobCompletion
++  * Marks job as completed and paid
++  * Emits JobCompleted event
++
++- getJob(uint256 jobId) view returns (Job)
++- getAllActiveJobs() view returns (Job[])
++- getUserApplications(address user) view returns (Application[])
++
++Events:
++- JobPosted(uint256 indexed jobId, address indexed poster, uint256 bounty)
++- ApplicationSubmitted(uint256 indexed jobId, address indexed applicant)
++- ApplicantAccepted(uint256 indexed jobId, address indexed worker)
++- JobCompleted(uint256 indexed jobId, address indexed worker, uint256 rating)
++
++📋 PHASE 6: INTEGRATION & TESTING
++Command 24: End-to-End Flow Integration
++In main App.jsx, connect all components to create complete user flow:
++
++1. User lands on app → sees landing page with "Connect Wallet"
++2. Clicks Connect Wallet → connects to Base network
++3. Dashboard loads → shows stats, recent activity
++4. User clicks "Take Skill Test" → selects category
++5. AI generates test questions → user answers
++6. Submit test → AI analyzes → shows score
++7. If passed → "Mint Skill NFT" button appears
++8. User mints NFT → transaction sent to blockchain
++9. NFT appears in Reputation Profile
++10. User browses Job Bounties → filtered by verified skills
++11. Clicks job → sees details → clicks Apply
++12. Fills application form → submits on-chain
++13. Application appears in tracker
++14. When job completed → reputation updates automatically
++
++Test each step:
++- Add loading states between steps
++- Error handling at each point
++- Success confirmations
++- State updates properly
++- UI reflects blockchain state
++Command 25: Error Handling & Edge Cases
++Add comprehensive error handling throughout app:
++
++Wallet errors:
++- Not installed: show "Install Base Wallet" link
++- Wrong network: prompt network switch
++- User rejected: show friendly message
++- Disconnected mid-session: auto-reconnect prompt
++
++Blockchain errors:
++- Insufficient gas: show estimate and warning
++- Transaction failed: show reason and retry option
++- Network congestion: show "try again later" message
++- Contract reverted: parse revert reason
++
++AI API errors:
++- Timeout: retry with exponential backoff
++- Rate limited: show "please wait" message
++- Invalid response: fallback to default questions
++- Network error: offline mode message
++
++Form validation:
++- Empty required fields: highlight in red
++- Invalid wallet address: format check
++- Deadline in past: prevent submission
++- Bounty too low: warning message
++
++Display user-friendly error messages with:
++- Clear explanation
++- Suggested fix
++- Retry button
++- Support contact
++Command 26: Performance Optimization
++Optimize app performance:
++
++1. Code splitting:
++   - Lazy load heavy components (JobDetail, SkillTest)
++   - Use React.lazy and Suspense
++   - Show loading skeletons
++
++2. Data caching:
++   - Cache blockchain queries for 5 minutes
++   - Cache AI-generated tests for 1 hour
++   - Use localStorage for user preferences
++
++3. Image optimization:
++   - Lazy load NFT images
++   - Use placeholder while loading
++   - Compress uploaded images
++
++4. API call optimization:
++   - Debounce search inputs (500ms)
++   - Batch multiple contract reads into multicall
++   - Cancel pending requests on unmount
++
++5. Re-render optimization:
++   - Use React.memo on expensive components
++   - useMemo for filtered/sorted lists
++   - useCallback for event handlers
++
++6. Bundle size:
++   - Tree-shake unused library code
++   - Use dynamic imports
++   - Minify production build
++
++Measure performance with React DevTools Profiler
++
++📋 PHASE 7: POLISH & DEMO PREP
++Command 27: Demo Data Seeding
++Create seed data for demonstration in development mode:
++
++File: src/data/demoData.js
++
++Export:
++- demoSkills: array of 5 sample verified skills
++  [{
++    id: 1,
++    skillName: "React Development",
++    score: 85,
++    verifiedDate: "2024-11-15",
++    nftTokenId: 1001
++  }, ...]
++
++- demoJobs: array of 10 sample job bounties
++  [{
++    id: 1,
++    title: "Build DeFi Dashboard",
++    poster: "0x1234...5678",
++    requiredSkills: ["React Development", "Web3"],
++    bountyAmount: 0.5, // ETH
++    deadline: Date.now() + 7 * 24 * 60 * 60 * 1000,
++    applicantCount: 3
++  }, ...]
++
++- demoReputation: sample reputation data
++  {
++    score: 450,
++    jobsCompleted: 8,
++    averageRating: 4.5,
++    totalEarnings: 2.3
++  }
++
++- demoApplications: sample applications
++  [{
++    jobId: 1,
++    status: "accepted",
++    appliedDate: "2024-11-20",
++    message: "I have 3 years experience..."
++  }, ...]
++
++Use env variable to toggle: VITE_USE_DEMO_DATA=true
++Load demo data in Context provider if enabled
++Command 28: Onboarding Tutorial
++Create onboarding flow "components/Onboarding.jsx":
++
++- Multi-step tutorial modal on first visit
++- Steps:
++  1. Welcome screen explaining AIJobMatch concept
++  2. "Connect your wallet" step with visual guide
++  3. "Take a skill test" explanation with screenshot
++  4. "Browse jobs" step showing how matching works
++  5. "Build reputation" explaining the system
++  6. Final step: "Start your journey" CTA
++
++Features:
++- Step indicators (dots at bottom)
++- "Skip tutorial" button
++- "Next" and "Previous" buttons
++- Progress bar
++- Illustrations or GIFs for each step
++- Checkbox: "Don't show again"
++- Save completion to localStorage
++
++Use Framer Motion for smooth transitions
++Auto-show on first app visit
++Manual access via help icon in header
++Command 29: UI Polish & Animations
++Enhance visual appeal throughout app:
++
++1. Micro-interactions:
++   - Button hover: scale(1.05) + shadow
++   - Card hover: lift effect + glow
++   - Input focus: border color transition
++   - Checkbox: smooth checkmark animation
++
++2. Page transitions:
++   - Fade in/out when switching sections
++   - Slide animations for modals
++   - Stagger animation for job card lists
++
++3. Score reveal:
++   - Count-up animation for numbers (0 to final)
++   - Circular progress fills smoothly
++   - Confetti burst if high score
++   - Sound effect (optional, user can mute)
++
++4. Loading states:
++   - Skeleton screens for content
++   - Spinner for buttons
++   - Progress bars for long operations
++   - Shimmer effect on loading cards
++
++5. Success celebrations:
++   - Fireworks animation on NFT mint
++   - Trophy icon bounce on job acceptance
++   - Star shower on reputation level up
++
++6. Color system:
++   - Primary: #3b82f6 (blue)
++   - Secondary: #8b5cf6 (purple)
++   - Success: #10b981 (green)
++   - Warning: #f59e0b (orange)
++   - Error: #ef4444 (red)
++   - Neutral: #6b7280 (gray)
++
++7. Typography:
++   - Headers: font-bold, text-2xl to text-4xl
++   - Body: font-normal, text-base
++   - Monospace for addresses/hashes
++
++Use Tailwind's transition utilities
++Add custom animations in tailwind.config.js
++Command 30: Mobile Responsiveness Check
++Ensure perfect mobile experience:
++
++Breakpoints to test:
++- Mobile: 320px - 640px
++- Tablet: 641px - 1024px  
++- Desktop: 1025px+
++
++Mobile optimizations:
++1. Navigation:
++   - Hamburger menu instead of sidebar
++   - Bottom tab bar for main sections
++   - Swipe gestures for navigation
++
++2. Job cards:
++   - Single column layout
++   - Larger touch targets (min 44px)
++   - Swipe to see more details
++
++3. Skill test:
++   - Full-screen mode on mobile
++   - Larger answer buttons
++   - Fixed progress bar at top
++
++4. Forms:
++   - Stack fields vertically
++   - Larger input fields
++   - Floating labels
++   - Native mobile keyboards
++
++5. Modals:
++   - Slide from bottom on mobile
++   - Full height on small screens
++   - Swipe down to dismiss
++
++6. Tables/Lists:
++   - Horizontal scroll if needed
++   - Collapse details on mobile
++   - "View more" expansions
++
++Test on:
++- Chrome DevTools device emulator
++- Real iPhone (Safari)
++- Real Android (Chrome)
++- Different orientations
++
++Fix any layout breaks or overflow issues
++
++📋 PHASE 8: DEPLOYMENT
++Command 31: Smart Contract Deployment
++Create deployment script "scripts/deploy.js":
++
++const { ethers } = require("hardhat");
++
++async function main() {
++  console.log("Deploying contracts to Base...");
++  
++  // Deploy SkillNFT
++  const SkillNFT = await ethers.getContractFactory("SkillNFT");
++  const skillNFT = await SkillNFT.deploy();
++  await skillNFT.deployed();
++  console.log("SkillNFT deployed to:", skillNFT.address);
++  
++  // Deploy ReputationSystem
++  const ReputationSystem = await ethers.getContractFactory("ReputationSystem");
++  const reputation = await ReputationSystem.deploy();
++  await reputation.deployed();
++  console.log("ReputationSystem deployed to:", reputation.address);
++  
++  // Deploy JobBounty (pass addresses of other contracts)
++  const JobBounty = await ethers.getContractFactory("JobBounty");
++  const jobBounty = await JobBounty.deploy(
++    skillNFT.address,
++    reputation.address
++  );
++  await jobBounty.deployed();
++  console.log("JobBounty deployed to:", jobBounty.address);
++  
++  // Grant permissions
++  await reputation.grantRole(
++    await reputation.UPDATER_ROLE(),
++    jobBounty.address
++  );
++  
++  console.log("\nDeployment complete!");
++  console.log("Save these addresses to .env file");
++}
++
++main()
++  .then(() => process.exit(0))
++  .catch((error) => {
++    console.error(error);
++    process.exit(1);
++  });
++
++Run with: npx hardhat run scripts/deploy.js --network base
++Command 32: Frontend Build & Environment Setup
++Create production build configuration:
++
++1. Environment variables (.env.production):
++   VITE_SKILL_NFT_ADDRESS=0x...
++   VITE_REPUTATION_ADDRESS=0x...
++   VITE_JOB_BOUNTY_ADDRESS=0x...
++   VITE_BASE_RPC_URL=https://mainnet.base.org
++   VITE_CLAUDE_API_KEY=sk-ant-...
++   VITE_CHAIN_ID=8453
++   VITE_USE_DEMO_DATA=false
++
++2. Build script in package.json:
++   "scripts": {
++     "build": "vite build",
++     "preview": "vite preview"
++   }
++
++3. Vite config optimization (vite.config.js):
++   export default {
++     build: {
++       target: 'es2020',
++       minify: 'terser',
++       rollupOptions: {
++         output: {
++           manualChunks: {
++             vendor: ['react', 'react-dom'],
++             web3: ['ethers'],
++             ai: ['@anthropic-ai/sdk']
++           }
++         }
++       }
++     }
++   }
++
++Disable ESLint errors during builds by updating next.config.js 
++to set eslint.ignoreDuringBuilds to true
+
+# 2025-12-01 06:59:00.554402
++🎯 AIJobMatch - Complete Command List for OpenXAI
++PROJECT: AIJobMatch - Skills-to-Opportunity Matcher
++
++📋 PHASE 1: FRONTEND UI COMPONENTS
++Command 1: Main App Structure
++Create a React component called "AIJobMatchApp" with the following features:
++- Professional gradient background (blue #1e40af to purple #7c3aed)
++- Clean, modern header with logo "💼 AIJobMatch" and tagline "Skills over credentials"
++- Navigation sidebar with 4 sections: Dashboard, Skill Tests, Job Bounties, My Reputation
++- Main content area that switches based on active section
++- Top right corner: ConnectWallet button and user reputation score badge
++- Use Tailwind CSS with professional color scheme
++- Mobile responsive with hamburger menu
++- Smooth transitions between sections
++- Footer with "Powered by Base & Claude AI"
++Command 2: Dashboard Component
++Create a "Dashboard" component with:
++- Welcome message with connected wallet address
++- 4 stat cards in a grid:
++  * Total Skills Verified (number with icon)
++  * Reputation Score (0-1000 with progress bar)
++  * Active Applications (number)
++  * Earnings (in ETH)
++- "Quick Actions" section with 3 buttons:
++  * Take Skill Test (primary blue button)
++  * Browse Jobs (secondary button)
++  * View Reputation NFT (outline button)
++- Recent activity feed showing last 5 actions
++- Chart showing reputation growth over time using recharts
++- Use lucide-react icons throughout
++- Skeleton loading states
++Command 3: Skill Test Interface
++Create a "SkillTestSection" component with:
++- Dropdown to select skill category: Web Development, Design, Marketing, Data Analysis, Writing
++- "Start Test" button that reveals test interface
++- Test UI with:
++  * Progress bar showing question X of 10
++  * Question display area (supports text, code snippets, images)
++  * Multiple choice answers (4 options per question)
++  * Timer showing remaining time (10 min total)
++  * "Next" and "Previous" buttons
++  * "Submit Test" button on last question
++- After submission:
++  * Loading animation with "AI analyzing your responses..."
++  * Score reveal with confetti animation if score > 70%
++  * Detailed breakdown per question
++  * "Mint Skill NFT" button if passed (score >= 70%)
++- Use different colors for correct/incorrect answers
++- Responsive design for mobile
++Command 4: Job Bounties Listing
++Create a "JobBountiesSection" component with:
++- Filter bar with:
++  * Search input (by keyword)
++  * Skill filter dropdown (show only jobs matching my verified skills)
++  * Bounty range slider (₱0 - ₱50,000)
++  * Sort by: Newest, Highest Bounty, Best Match
++- Job cards grid (2 columns desktop, 1 mobile) with each card showing:
++  * Job title
++  * Company/poster address (shortened)
++  * Required skills as badges (highlight verified skills in green)
++  * Bounty amount in ETH and PHP equivalent
++  * Deadline countdown
++  * Number of applicants
++  * "Apply Now" button (disabled if missing required skills)
++- Hover effect with shadow and scale
++- Pagination at bottom (10 jobs per page)
++- Empty state: "No jobs match your filters" with illustration
++Command 5: Job Detail Modal
++Create a "JobDetailModal" component that appears when clicking a job card:
++- Modal overlay with backdrop blur
++- Content sections:
++  * Job title and company
++  * Full description
++  * Required skills list with checkmarks for verified skills
++  * Deliverables/milestones
++  * Bounty breakdown
++  * Deadline
++  * Application count
++- "Apply with Verified Skills" button
++- Application form (appears on click):
++  * Cover message textarea
++  * Portfolio links (optional)
++  * Estimated completion time
++  * "Submit Application" button
++- Close button (X) in top right
++- Smooth slide-in animation from bottom
++Command 6: Reputation Profile Component
++Create a "ReputationProfile" component with:
++- Large reputation score display (0-1000) with circular progress indicator
++- Reputation level badge: Beginner (0-200), Intermediate (201-500), Expert (501-800), Master (801-1000)
++- Skills verified section:
++  * Grid of skill badges with NFT icons
++  * Each badge shows: skill name, verification date, score percentage
++  * Click to view NFT on blockchain
++- Work history:
++  * Timeline of completed jobs
++  * Each entry shows: job title, completion date, rating, earnings
++- "View on Base Explorer" button to see on-chain reputation
++- "Share Profile" button generating shareable link
++- QR code for profile (for easy sharing)
++Command 7: Application Tracker
++Create an "ApplicationTracker" component showing:
++- Tabs: Active, Completed, Rejected
++- Application cards with:
++  * Job title
++  * Application date
++  * Status badge (Pending, Under Review, Accepted, Rejected, Completed)
++  * Progress indicators for milestones
++  * Messages from employer
++  * "Withdraw Application" option for pending
++  * "Submit Work" button for accepted jobs
++  * Rating display for completed jobs
++- Real-time updates when status changes
++- Notification badge on tab if new messages
++
++📋 PHASE 2: WEB3 INTEGRATION
++Command 8: Wallet Connection Setup
++Create a "ConnectWallet" button component that:
++- Displays "Connect Wallet" when not connected
++- On click:
++  * Detects if Base Wallet or MetaMask is installed
++  * Requests connection to Base network (chainId: 8453)
++  * Prompts network switch if on wrong network
++- When connected:
++  * Shows shortened address (0x1234...5678)
++  * Shows small circle avatar (generated from address using jazzicon pattern)
++  * Dropdown on click with options:
++    - View Profile
++    - Disconnect
++- Stores wallet address in React Context
++- Shows connection status indicator (green dot)
++- Error handling for wallet not found or user rejection
++- Pulse animation while connecting
++Command 9: Skill NFT Minting Function
++Create a function "mintSkillNFT" in services/web3Service.js that:
++- Takes parameters: skillName, score, testMetadata, walletAddress
++- Generates NFT metadata JSON:
++  {
++    name: "Verified Skill: [skillName]",
++    description: "On-chain proof of [skillName] proficiency",
++    image: "ipfs://[generated-certificate-image]",
++    attributes: [
++      { trait_type: "Skill", value: skillName },
++      { trait_type: "Score", value: score },
++      { trait_type: "Verified Date", value: timestamp },
++      { trait_type: "Test Questions", value: testMetadata }
++    ]
++  }
++- Calls smart contract mintSkill function
++- Waits for transaction confirmation
++- Returns: { success: boolean, tokenId: number, txHash: string }
++- Shows toast notifications for pending/success/error states
++- Updates user's verified skills array in state
++Command 10: Smart Contract Interaction Utils
++Create utilities file "services/contractUtils.js" with:
++- Contract ABI definitions for:
++  * SkillNFT contract
++  * ReputationSystem contract  
++  * JobBounty contract
++- Function getContract(contractName) that returns ethers.js contract instance
++- Function getUserSkillNFTs(address) that:
++  * Queries blockchain for all NFTs owned by address
++  * Fetches metadata for each NFT
++  * Returns array of skill objects
++- Function getReputationScore(address) that:
++  * Reads on-chain reputation score
++  * Calculates level based on score
++  * Returns { score, level, lastUpdate }
++- Function estimateGas(contractFunction, params) for gas estimation
++- Error handling wrapper for all blockchain calls
++Command 11: Job Application On-Chain
++Create function "submitJobApplication" that:
++- Takes: jobId, coverMessage, portfolioLinks, verifiedSkills
++- Creates application struct:
++  {
++    applicant: walletAddress,
++    jobId: jobId,
++    skills: verifiedSkills (array of NFT tokenIds),
++    timestamp: Date.now(),
++    message: coverMessage,
++    status: "pending"
++  }
++- Calls JobBounty smart contract applyToJob function
++- Emits ApplicationSubmitted event on-chain
++- Updates local state with application
++- Shows success notification
++- Returns applicationId
++Command 12: Reputation Update Function
++Create function "updateReputation" that:
++- Called when job is completed
++- Takes: jobId, rating (1-5 stars), earnings
++- Calculates reputation points:
++  * Base: 10 points per completion
++  * Bonus: rating * 5 (max 25)
++  * Penalty: -20 if deadline missed
++- Calls ReputationSystem.updateScore on-chain
++- Updates NFT metadata with new reputation
++- Emits ReputationUpdated event
++- Triggers UI update with animation
++- Returns new total reputation score
++
++📋 PHASE 3: AI INTEGRATION (Claude API)
++Command 13: AI Test Question Generator
++Create async function "generateSkillTest" in services/aiService.js that:
++- Takes parameter: skillCategory (string)
++- Calls Claude API with system prompt:
++  "You are an expert skills assessor. Generate a 10-question multiple choice test for [skillCategory]. 
++   Each question should test practical knowledge. 
++   Return ONLY valid JSON:
++   {
++     questions: [
++       {
++         id: 1,
++         question: "question text",
++         code: "code snippet if applicable",
++         options: ["A", "B", "C", "D"],
++         correctAnswer: "A",
++         explanation: "why this is correct"
++       }
++     ]
++   }
++   Make questions challenging but fair. Mix difficulty levels."
++- Model: claude-sonnet-4-20250514
++- Max tokens: 2000
++- Parses JSON response safely
++- Validates question structure
++- Returns questions array
++- Caches test for 1 hour to avoid regenerating
++- Error handling with retry logic
++Command 14: AI Answer Analysis
++Create function "analyzeTestAnswers" that:
++- Takes: questions array, userAnswers array
++- Calls Claude API with prompt:
++  "Analyze these test responses and provide detailed feedback.
++   Questions: [questions]
++   User Answers: [userAnswers]
++   
++   Return ONLY JSON:
++   {
++     score: 0-100,
++     correctCount: number,
++     totalQuestions: number,
++     passed: boolean (>= 70),
++     feedback: {
++       strengths: ["area1", "area2"],
++       weaknesses: ["area1", "area2"],
++       recommendations: ["suggestion1", "suggestion2"]
++     },
++     detailedResults: [
++       {
++         questionId: 1,
++         correct: true/false,
++         userAnswer: "A",
++         correctAnswer: "B",
++         explanation: "why"
++       }
++     ]
++   }"
++- Returns analysis object
++- Stores result on-chain as test metadata
++- Timeout: 15 seconds
++Command 15: AI Job Matching Algorithm
++Create function "matchJobsToSkills" that:
++- Takes: userSkills array, availableJobs array
++- Calls Claude API to analyze match quality:
++  "You are a job matching AI. Given user's verified skills and job requirements, 
++   calculate match scores.
++   
++   User Skills: [skills with scores]
++   Jobs: [job requirements]
++   
++   Return ONLY JSON array:
++   [
++     {
++       jobId: "id",
++       matchScore: 0-100,
++       matchedSkills: ["skill1", "skill2"],
++       missingSkills: ["skill3"],
++       recommendation: "why good fit or not"
++     }
++   ]
++   Sort by matchScore descending."
++- Parses response
++- Sorts jobs by match score
++- Highlights best matches in UI
++- Returns sorted job list with match data
++Command 16: AI Portfolio Analysis
++Create function "analyzePortfolio" that:
++- Takes: portfolioLinks array (GitHub, Behance, etc.)
++- For each link, uses Claude to:
++  * Fetch public data (if available)
++  * Analyze quality and relevance
++  * Extract skills demonstrated
++  * Rate experience level
++- Returns:
++  {
++    overallScore: 0-100,
++    detectedSkills: ["skill1", "skill2"],
++    experienceLevel: "beginner/intermediate/expert",
++    highlights: ["impressive aspect 1", "aspect 2"],
++    suggestions: ["improve this", "add that"]
++  }
++- Used to supplement skill test results
++- Displayed in reputation profile
++
++📋 PHASE 4: BACKEND LOGIC & STATE MANAGEMENT
++Command 17: Global State Context
++Create React Context "AIJobMatchContext.jsx" that manages:
++- State variables:
++  * walletAddress: string
++  * userSkills: array of verified skill objects
++  * reputationScore: number
++  * userApplications: array
++  * availableJobs: array
++  * activeTest: object or null
++  * loading: boolean
++  * error: string or null
++
++- Functions:
++  * connectWallet(): connects and sets address
++  * loadUserData(address): fetches skills, reputation, applications
++  * startSkillTest(category): initializes test
++  * submitTest(answers): sends to AI, updates skills
++  * applyToJob(jobId, data): submits application
++  * refreshJobs(): fetches latest bounties
++  * updateReputation(score): updates local state
++
++- Provider component wrapping entire app
++- Custom hooks: useWallet(), useSkills(), useJobs()
++- Persists some data to localStorage
++Command 18: Job Data Fetcher
++Create service "services/jobService.js" with:
++- Function fetchAllJobs() that:
++  * Queries JobBounty smart contract for all active jobs
++  * Reads job details from contract storage
++  * Fetches additional metadata from IPFS if applicable
++  * Returns array of job objects:
++    {
++      id, title, description, poster, requiredSkills,
++      bountyAmount, deadline, applicantCount, status
++    }
++  * Caches results for 5 minutes
++  * Sorts by newest first
++
++- Function fetchMyApplications(address) that:
++  * Gets all applications by user address
++  * Includes job details for each application
++  * Groups by status
++  * Returns categorized applications
++
++- Function fetchJobById(jobId) for detailed view
++Command 19: Skill Verification Manager
++Create "services/skillManager.js" with:
++- Function verifySkill(skillName, testResult) that:
++  * Checks if score >= 70% (passing)
++  * If passed:
++    - Mints NFT via mintSkillNFT
++    - Updates user's verifiedSkills array
++    - Updates reputation (+50 points for new skill)
++    - Stores test metadata on-chain
++  * Returns verification status
++
++- Function getVerifiedSkills(address) that:
++  * Fetches all skill NFTs owned by address
++  * Parses metadata
++  * Returns array with skill name, score, date
++
++- Function hasRequiredSkills(userSkills, jobRequiredSkills) that:
++  * Checks if user has all required verified skills
++  * Returns { hasAll: boolean, missing: [] }
++Command 20: Notification System
++Create "services/notificationService.js" with:
++- Toast notification wrapper using react-hot-toast or similar
++- Functions:
++  * notifySuccess(message)
++  * notifyError(message)
++  * notifyInfo(message)
++  * notifyLoading(message) returns dismiss function
++
++- Event listener for on-chain events:
++  * ApplicationStatusChanged
++  * JobCompleted
++  * ReputationUpdated
++  * NewJobPosted matching user skills
++
++- Shows desktop notifications (if permission granted)
++- Stores notification history in state
++- Badge counter for unread notifications
++
++📋 PHASE 5: SMART CONTRACTS (Solidity)
++Command 21: Skill NFT Contract
++Create Solidity smart contract "SkillNFT.sol" with:
++- Pragma solidity ^0.8.20
++- Inherit OpenZeppelin ERC721URIStorage
++- Contract name: SkillNFT, symbol: SKILL
++
++Structs:
++- SkillData {
++    string skillName;
++    uint256 score;
++    uint256 verifiedDate;
++    string testMetadataURI;
++  }
++
++Mappings:
++- tokenId => SkillData
++- address => tokenId[] (user's skills)
++- skillName => tokenId[] (all holders of skill)
++
++Functions:
++- mintSkill(address to, string skillName, uint256 score, string metadataURI)
++  * Requires score >= 70
++  * Increments tokenId counter
++  * Mints NFT to address
++  * Stores SkillData
++  * Emits SkillVerified event
++  * Returns tokenId
++
++- getUserSkills(address user) view returns (uint256[])
++  * Returns array of tokenIds owned by user
++
++- getSkillData(uint256 tokenId) view returns (SkillData)
++
++- transferFrom override: prevent transfer (soulbound)
++
++Events:
++- SkillVerified(address indexed user, string skillName, uint256 score, uint256 tokenId)
++Command 22: Reputation System Contract
++Create Solidity contract "ReputationSystem.sol" with:
++- Pragma solidity ^0.8.20
++
++Structs:
++- ReputationData {
++    uint256 score;
++    uint256 jobsCompleted;
++    uint256 totalEarnings;
++    uint256 averageRating; // out of 500 (5 stars * 100)
++    uint256 lastUpdate;
++  }
++
++Mappings:
++- address => ReputationData
++
++Functions:
++- updateReputation(address user, uint256 points, bool increase)
++  * Only callable by JobBounty contract
++  * Increases or decreases reputation score
++  * Updates lastUpdate timestamp
++  * Emits ReputationUpdated event
++
++- recordJobCompletion(address user, uint256 rating, uint256 earnings)
++  * Increments jobsCompleted
++  * Updates averageRating (weighted average)
++  * Adds earnings to totalEarnings
++  * Adds reputation points based on rating
++
++- getReputation(address user) view returns (ReputationData)
++
++- getLevel(address user) view returns (string)
++  * Returns level based on score:
++    0-200: Beginner
++    201-500: Intermediate  
++    501-800: Expert
++    801-1000: Master
++
++Events:
++- ReputationUpdated(address indexed user, uint256 newScore, uint256 timestamp)
++Command 23: Job Bounty Contract
++Create Solidity contract "JobBounty.sol" with:
++- Pragma solidity ^0.8.20
++
++Structs:
++- Job {
++    uint256 id;
++    address poster;
++    string title;
++    string descriptionURI;
++    string[] requiredSkills;
++    uint256 bountyAmount;
++    uint256 deadline;
++    address[] applicants;
++    address acceptedWorker;
++    bool completed;
++    bool paid;
++  }
++
++- Application {
++    uint256 jobId;
++    address applicant;
++    uint256[] verifiedSkillNFTs;
++    string message;
++    uint256 timestamp;
++    ApplicationStatus status; // enum: Pending, Accepted, Rejected
++  }
++
++Mappings:
++- jobId => Job
++- applicationId => Application
++- address => uint256[] (user's applications)
++
++Functions:
++- postJob(string title, string descriptionURI, string[] requiredSkills, uint256 deadline) payable
++  * Requires msg.value as bounty
++  * Creates new Job
++  * Increments jobId counter
++  * Stores bounty in contract
++  * Emits JobPosted event
++  * Returns jobId
++
++- applyToJob(uint256 jobId, uint256[] verifiedSkillNFTs, string message)
++  * Verifies user owns the NFTs
++  * Creates Application
++  * Adds to job.applicants
++  * Emits ApplicationSubmitted event
++
++- acceptApplicant(uint256 jobId, address applicant)
++  * Only job poster
++  * Sets job.acceptedWorker
++  * Updates application status
++  * Emits ApplicantAccepted event
++
++- completeJob(uint256 jobId, uint256 rating)
++  * Only job poster after work submitted
++  * Transfers bounty to worker
++  * Calls ReputationSystem.recordJobCompletion
++  * Marks job as completed and paid
++  * Emits JobCompleted event
++
++- getJob(uint256 jobId) view returns (Job)
++- getAllActiveJobs() view returns (Job[])
++- getUserApplications(address user) view returns (Application[])
++
++Events:
++- JobPosted(uint256 indexed jobId, address indexed poster, uint256 bounty)
++- ApplicationSubmitted(uint256 indexed jobId, address indexed applicant)
++- ApplicantAccepted(uint256 indexed jobId, address indexed worker)
++- JobCompleted(uint256 indexed jobId, address indexed worker, uint256 rating)
++
++📋 PHASE 6: INTEGRATION & TESTING
++Command 24: End-to-End Flow Integration
++In main App.jsx, connect all components to create complete user flow:
++
++1. User lands on app → sees landing page with "Connect Wallet"
++2. Clicks Connect Wallet → connects to Base network
++3. Dashboard loads → shows stats, recent activity
++4. User clicks "Take Skill Test" → selects category
++5. AI generates test questions → user answers
++6. Submit test → AI analyzes → shows score
++7. If passed → "Mint Skill NFT" button appears
++8. User mints NFT → transaction sent to blockchain
++9. NFT appears in Reputation Profile
++10. User browses Job Bounties → filtered by verified skills
++11. Clicks job → sees details → clicks Apply
++12. Fills application form → submits on-chain
++13. Application appears in tracker
++14. When job completed → reputation updates automatically
++
++Test each step:
++- Add loading states between steps
++- Error handling at each point
++- Success confirmations
++- State updates properly
++- UI reflects blockchain state
++Command 25: Error Handling & Edge Cases
++Add comprehensive error handling throughout app:
++
++Wallet errors:
++- Not installed: show "Install Base Wallet" link
++- Wrong network: prompt network switch
++- User rejected: show friendly message
++- Disconnected mid-session: auto-reconnect prompt
++
++Blockchain errors:
++- Insufficient gas: show estimate and warning
++- Transaction failed: show reason and retry option
++- Network congestion: show "try again later" message
++- Contract reverted: parse revert reason
++
++AI API errors:
++- Timeout: retry with exponential backoff
++- Rate limited: show "please wait" message
++- Invalid response: fallback to default questions
++- Network error: offline mode message
++
++Form validation:
++- Empty required fields: highlight in red
++- Invalid wallet address: format check
++- Deadline in past: prevent submission
++- Bounty too low: warning message
++
++Display user-friendly error messages with:
++- Clear explanation
++- Suggested fix
++- Retry button
++- Support contact
++Command 26: Performance Optimization
++Optimize app performance:
++
++1. Code splitting:
++   - Lazy load heavy components (JobDetail, SkillTest)
++   - Use React.lazy and Suspense
++   - Show loading skeletons
++
++2. Data caching:
++   - Cache blockchain queries for 5 minutes
++   - Cache AI-generated tests for 1 hour
++   - Use localStorage for user preferences
++
++3. Image optimization:
++   - Lazy load NFT images
++   - Use placeholder while loading
++   - Compress uploaded images
++
++4. API call optimization:
++   - Debounce search inputs (500ms)
++   - Batch multiple contract reads into multicall
++   - Cancel pending requests on unmount
++
++5. Re-render optimization:
++   - Use React.memo on expensive components
++   - useMemo for filtered/sorted lists
++   - useCallback for event handlers
++
++6. Bundle size:
++   - Tree-shake unused library code
++   - Use dynamic imports
++   - Minify production build
++
++Measure performance with React DevTools Profiler
++
++📋 PHASE 7: POLISH & DEMO PREP
++Command 27: Demo Data Seeding
++Create seed data for demonstration in development mode:
++
++File: src/data/demoData.js
++
++Export:
++- demoSkills: array of 5 sample verified skills
++  [{
++    id: 1,
++    skillName: "React Development",
++    score: 85,
++    verifiedDate: "2024-11-15",
++    nftTokenId: 1001
++  }, ...]
++
++- demoJobs: array of 10 sample job bounties
++  [{
++    id: 1,
++    title: "Build DeFi Dashboard",
++    poster: "0x1234...5678",
++    requiredSkills: ["React Development", "Web3"],
++    bountyAmount: 0.5, // ETH
++    deadline: Date.now() + 7 * 24 * 60 * 60 * 1000,
++    applicantCount: 3
++  }, ...]
++
++- demoReputation: sample reputation data
++  {
++    score: 450,
++    jobsCompleted: 8,
++    averageRating: 4.5,
++    totalEarnings: 2.3
++  }
++
++- demoApplications: sample applications
++  [{
++    jobId: 1,
++    status: "accepted",
++    appliedDate: "2024-11-20",
++    message: "I have 3 years experience..."
++  }, ...]
++
++Use env variable to toggle: VITE_USE_DEMO_DATA=true
++Load demo data in Context provider if enabled
++Command 28: Onboarding Tutorial
++Create onboarding flow "components/Onboarding.jsx":
++
++- Multi-step tutorial modal on first visit
++- Steps:
++  1. Welcome screen explaining AIJobMatch concept
++  2. "Connect your wallet" step with visual guide
++  3. "Take a skill test" explanation with screenshot
++  4. "Browse jobs" step showing how matching works
++  5. "Build reputation" explaining the system
++  6. Final step: "Start your journey" CTA
++
++Features:
++- Step indicators (dots at bottom)
++- "Skip tutorial" button
++- "Next" and "Previous" buttons
++- Progress bar
++- Illustrations or GIFs for each step
++- Checkbox: "Don't show again"
++- Save completion to localStorage
++
++Use Framer Motion for smooth transitions
++Auto-show on first app visit
++Manual access via help icon in header
++Command 29: UI Polish & Animations
++Enhance visual appeal throughout app:
++
++1. Micro-interactions:
++   - Button hover: scale(1.05) + shadow
++   - Card hover: lift effect + glow
++   - Input focus: border color transition
++   - Checkbox: smooth checkmark animation
++
++2. Page transitions:
++   - Fade in/out when switching sections
++   - Slide animations for modals
++   - Stagger animation for job card lists
++
++3. Score reveal:
++   - Count-up animation for numbers (0 to final)
++   - Circular progress fills smoothly
++   - Confetti burst if high score
++   - Sound effect (optional, user can mute)
++
++4. Loading states:
++   - Skeleton screens for content
++   - Spinner for buttons
++   - Progress bars for long operations
++   - Shimmer effect on loading cards
++
++5. Success celebrations:
++   - Fireworks animation on NFT mint
++   - Trophy icon bounce on job acceptance
++   - Star shower on reputation level up
++
++6. Color system:
++   - Primary: #3b82f6 (blue)
++   - Secondary: #8b5cf6 (purple)
++   - Success: #10b981 (green)
++   - Warning: #f59e0b (orange)
++   - Error: #ef4444 (red)
++   - Neutral: #6b7280 (gray)
++
++7. Typography:
++   - Headers: font-bold, text-2xl to text-4xl
++   - Body: font-normal, text-base
++   - Monospace for addresses/hashes
++
++Use Tailwind's transition utilities
++Add custom animations in tailwind.config.js
++Command 30: Mobile Responsiveness Check
++Ensure perfect mobile experience:
++
++Breakpoints to test:
++- Mobile: 320px - 640px
++- Tablet: 641px - 1024px  
++- Desktop: 1025px+
++
++Mobile optimizations:
++1. Navigation:
++   - Hamburger menu instead of sidebar
++   - Bottom tab bar for main sections
++   - Swipe gestures for navigation
++
++2. Job cards:
++   - Single column layout
++   - Larger touch targets (min 44px)
++   - Swipe to see more details
++
++3. Skill test:
++   - Full-screen mode on mobile
++   - Larger answer buttons
++   - Fixed progress bar at top
++
++4. Forms:
++   - Stack fields vertically
++   - Larger input fields
++   - Floating labels
++   - Native mobile keyboards
++
++5. Modals:
++   - Slide from bottom on mobile
++   - Full height on small screens
++   - Swipe down to dismiss
++
++6. Tables/Lists:
++   - Horizontal scroll if needed
++   - Collapse details on mobile
++   - "View more" expansions
++
++Test on:
++- Chrome DevTools device emulator
++- Real iPhone (Safari)
++- Real Android (Chrome)
++- Different orientations
++
++Fix any layout breaks or overflow issues
++
++📋 PHASE 8: DEPLOYMENT
++Command 31: Smart Contract Deployment
++Create deployment script "scripts/deploy.js":
++
++const { ethers } = require("hardhat");
++
++async function main() {
++  console.log("Deploying contracts to Base...");
++  
++  // Deploy SkillNFT
++  const SkillNFT = await ethers.getContractFactory("SkillNFT");
++  const skillNFT = await SkillNFT.deploy();
++  await skillNFT.deployed();
++  console.log("SkillNFT deployed to:", skillNFT.address);
++  
++  // Deploy ReputationSystem
++  const ReputationSystem = await ethers.getContractFactory("ReputationSystem");
++  const reputation = await ReputationSystem.deploy();
++  await reputation.deployed();
++  console.log("ReputationSystem deployed to:", reputation.address);
++  
++  // Deploy JobBounty (pass addresses of other contracts)
++  const JobBounty = await ethers.getContractFactory("JobBounty");
++  const jobBounty = await JobBounty.deploy(
++    skillNFT.address,
++    reputation.address
++  );
++  await jobBounty.deployed();
++  console.log("JobBounty deployed to:", jobBounty.address);
++  
++  // Grant permissions
++  await reputation.grantRole(
++    await reputation.UPDATER_ROLE(),
++    jobBounty.address
++  );
++  
++  console.log("\nDeployment complete!");
++  console.log("Save these addresses to .env file");
++}
++
++main()
++  .then(() => process.exit(0))
++  .catch((error) => {
++    console.error(error);
++    process.exit(1);
++  });
++
++Run with: npx hardhat run scripts/deploy.js --network base
++Command 32: Frontend Build & Environment Setup
++Create production build configuration:
++
++1. Environment variables (.env.production):
++   VITE_SKILL_NFT_ADDRESS=0x...
++   VITE_REPUTATION_ADDRESS=0x...
++   VITE_JOB_BOUNTY_ADDRESS=0x...
++   VITE_BASE_RPC_URL=https://mainnet.base.org
++   VITE_CLAUDE_API_KEY=sk-ant-...
++   VITE_CHAIN_ID=8453
++   VITE_USE_DEMO_DATA=false
++
++2. Build script in package.json:
++   "scripts": {
++     "build": "vite build",
++     "preview": "vite preview"
++   }
++
++3. Vite config optimization (vite.config.js):
++   export default {
++     build: {
++       target: 'es2020',
++       minify: 'terser',
++       rollupOptions: {
++         output: {
++           manualChunks: {
++             vendor: ['react', 'react-dom'],
++             web3: ['ethers'],
++             ai: ['@anthropic-ai/sdk']
++           }
++         }
++       }
++     }
++   }
++
++Disable ESLint errors during builds by updating next.config.js 
++to set eslint.ignoreDuringBuilds to true
